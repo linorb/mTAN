@@ -8,7 +8,10 @@ from physionet import PhysioNet, get_data_min_max, variable_time_collate_fn2
 from sklearn import model_selection
 from sklearn import metrics
 from person_activity import PersonActivity
+import matplotlib.pyplot as plt
 
+import matplotlib
+matplotlib.use('TkAgg')
 
 def count_parameters(model):
     return sum(p.numel() for p in model.parameters() if p.requires_grad)

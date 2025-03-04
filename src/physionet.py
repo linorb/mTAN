@@ -43,8 +43,10 @@ def get_data_min_max(records, device):
 class PhysioNet(object):
 
   urls = [
-    'https://physionet.org/files/challenge-2012/1.0.0/set-a.tar.gz?download',
-    'https://physionet.org/files/challenge-2012/1.0.0/set-b.tar.gz?download',
+    # 'https://physionet.org/files/challenge-2012/1.0.0/set-a.tar.gz?download',
+    # 'https://physionet.org/files/challenge-2012/1.0.0/set-b.tar.gz?download',
+    'https://physionet.org/files/challenge-2012/1.0.0/set-a.tar.gz',
+    'https://physionet.org/files/challenge-2012/1.0.0/set-b.tar.gz',
   ]
 
   outcome_urls = ['https://physionet.org/files/challenge-2012/1.0.0/Outcomes-a.txt']

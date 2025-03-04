@@ -1,2 +1,12 @@
 .DS_Store
 imgs/.DS_Store
+*.txt
+*.pt
+*.gz
+/src/extracted
+/src/data/old
+*.h5
+*.pyc
+/.idea
+/.idea
+/.idea

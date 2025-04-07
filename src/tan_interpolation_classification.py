@@ -192,7 +192,7 @@ def train_encoder_by_interpolation(args, experiment_id):
 
     return trained_model_filename
 
-def train_full_with_classifier(trained_model_filename, experiment_id):
+def train_full_with_classifier(trained_model_filename, experiment_id, new_args):
     device = torch.device(
         'cuda' if torch.cuda.is_available() else 'cpu')
     print(device)
@@ -207,6 +207,13 @@ def train_full_with_classifier(trained_model_filename, experiment_id):
     rec_state_dict = checkpoint['rec_state_dict']
     dec_state_dict = checkpoint['dec_state_dict']
     print(f"Loaded model from epoch {epoch}")
+
+    # Add for classification because the args were taken from interpolation task
+    args.classif = True
+    args.classify_pertp = False
+    args.alpha = new_args['alpha']
+    args.lr = new_args['lr']
+    args.niters = new_args['niters']
 
     # Load the data - change this part if you want to use different data to train the model
     if args.dataset == 'physionet':
@@ -224,14 +231,14 @@ def train_full_with_classifier(trained_model_filename, experiment_id):
         dim, torch.linspace(0, 1., args.num_ref_points), args.latent_dim, args.rec_hidden,
         embed_time=128, learn_emb=args.learn_emb, num_heads=args.enc_num_heads)
     rec.load_state_dict(rec_state_dict)
-    rec.eval()
+    rec.train()
     rec.to(device)
 
     dec = models.dec_mtan_rnn(
         dim, torch.linspace(0, 1., args.num_ref_points), args.latent_dim, args.gen_hidden,
         embed_time=128, learn_emb=args.learn_emb, num_heads=args.dec_num_heads)
     dec.load_state_dict(dec_state_dict)
-    dec.eval()
+    dec.train()
     dec.to(device)
 
     # Set the classifier - If you want to use a different classifier change here the architecture
@@ -348,4 +355,12 @@ def main():
     print(args, experiment_id)
 
     trained_model_filename = train_encoder_by_interpolation(args, experiment_id)
-    full_model_filename = train_full_with_classifier(trained_model_filename, experiment_id)
+
+    new_args = {'lr': 0.00001, 'alpha': 100, 'niters': 10}
+    full_model_filename = train_full_with_classifier(trained_model_filename, experiment_id, new_args)
+
+if __name__ == '__main__':
+    trained_model_filename = r"C:\Users\user\Documents\dev\mTAN\src\physionet_mtan_rnn_mtan_rnn_49317.h5"
+    experiment_id = 49317
+    new_args = {'lr': 0.00001, 'alpha': 100, 'niters': 10}
+    train_full_with_classifier(trained_model_filename, experiment_id, new_args)
